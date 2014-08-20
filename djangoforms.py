@@ -21,11 +21,11 @@ class VerseField(models.Field):
     __metaclass__ = models.SubfieldBase
 
     def __init__(self, *args, **kwargs):
-        kwargs['max_length'] = 104
+        kwargs['max_length'] = 6
         super(VerseField, self).__init__(*args, **kwargs)
 
     def db_type(self):
-        return 'varchar(%s)' % self.max_length
+        return 'int(%s)' % self.max_length
 
     def get_internal_type(self):
         return "VerseField"
@@ -48,7 +48,7 @@ class VerseField(models.Field):
 
     def get_db_prep_value(self, value):
         # Casts dates into a string for saving to db
-        return str(value)
+        return hash(value)
 
     def value_to_string(self, obj):
         val = self._get_val_from_obj(obj)

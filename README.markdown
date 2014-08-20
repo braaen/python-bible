@@ -49,12 +49,7 @@ Methods
 
 Installation
 ------------
-Clone this repository into a folder named "bible" in your Python path. Alternatively -
-if you don't need the bleeding-edge updates and patches - you can use easy_install:
-
-    easy_install bible
-
-That should get you up and running without having to mess with cloning or anything.
+Clone this repository into a folder named "bible" in your Python path.
 
 
 Example Usage
@@ -65,9 +60,9 @@ commands and output as entered using the Python interactive terminal.
 
 Using Verse Objects:
 
-    >>> import bible
+    >>> from bible.models import Verse
     
-    >>> v1 = bible.Verse('rom1:1')
+    >>> v1 = Verse('rom1:1')
     >>> v1.book
     45
     >>> v1.format('B C:V')
@@ -75,26 +70,26 @@ Using Verse Objects:
     >>> str(v1)
     45-1-1
     
-    >>> v = bible.Verse('Romans 17:1')
+    >>> v = Verse('Romans 17:1')
     ...
     RangeError: There are not that many chapters in Romans
     
-    >>> v = bible.Verse('Gen 1:50')
+    >>> v = Verse('Gen 1:50')
     ...
     RangeError: There is no verse 50 in Genesis 1
     
-    >>> v = bible.Verse('1-1-1')
-    >>> v = bible.Verse('gen1:1')
-    >>> v = bible.Verse('Genesis 1:1')
-    >>> v = bible.Verse(1,1,1)
+    >>> v = Verse('1-1-1')
+    >>> v = Verse('gen1:1')
+    >>> v = Verse('Genesis 1:1')
+    >>> v = Verse(1,1,1)
 
 Using Passage Objects:
     
-    >>> import bible
+    >>> from bible.models import Verse, Passage
     
-    >>> v1 = bible.Verse('rom1:1')
-    >>> v2 = bible.Verse('rom1:8')
-    >>> p = bible.Passage(v1,v2)
+    >>> v1 = Verse('rom1:1')
+    >>> v2 = Verse('rom1:8')
+    >>> p = Passage(v1,v2)
     >>> p.start.verse
     1
     >>> p.end.verse
@@ -108,9 +103,9 @@ Using Passage Objects:
     >>> p.format()
     Romans 1:1-8
         
-    >>> p = bible.Passage(v1,v2)
-    >>> p = bible.Passage(v1, 'Romans 1:8')
-    >>> p = bible.Passage('rom1:1','rom1:8')
+    >>> p = Passage(v1,v2)
+    >>> p = Passage(v1, 'Romans 1:8')
+    >>> p = Passage('rom1:1','rom1:8')
 
 
 Django Forms
@@ -133,7 +128,7 @@ to fix it.
 In the specific example above, given a model with start and end verses, a
 Passage object could be created in your view by combining the two Verse objects:
 
-    from bible import Passage
+    from bible.models import Passage
     from myproject.myapp.models import Scripture
     
     s = Scripture.objects.get(id=1)

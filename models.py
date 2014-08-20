@@ -32,8 +32,20 @@ class Verse(object):
                   unformatted_string = '1c 12:1'
                   Verse(unformatted_string)"""
 
+        # If we received one integer, convert to string and parse
+        if len(args) == 1 and isinstance(args[0], int):
+            strval = str(args[0])
+            # If strval length is 5, we know the leading 0 got chopped off during conversion
+            if len(strval) == 5:
+                strval = '0{}'.format(strval)
+            # Parse (e.g. 010133)
+            self.book = int(strval[:2])
+            self.chapter = int(strval[2:4])
+            self.verse = int(strval[4:])
+            self.translation = None
+
         # if we got 3 or 4 values, let's assume they are book, chapter, verse, translation)
-        if len(args) >= 3:
+        elif len(args) >= 3:
             self.book = args[0]
             self.chapter = args[1]
             self.verse = args[2]
