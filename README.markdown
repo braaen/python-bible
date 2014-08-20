@@ -28,7 +28,8 @@ Attributes
 
 Methods
 
-* __str__(self)  # normalized string output (for saving to database)
+* __str__(self)  # normalized string output
+* __hash__(self) # normalized hash output (for saving to database)
 * format(self, format_string)  # outputs a nicely formatted string
 
 
