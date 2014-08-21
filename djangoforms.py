@@ -21,7 +21,7 @@ class VerseField(models.Field):
     __metaclass__ = models.SubfieldBase
 
     def __init__(self, *args, **kwargs):
-        kwargs['max_length'] = 6
+        kwargs['max_length'] = 8
         super(VerseField, self).__init__(*args, **kwargs)
 
     def db_type(self):
