@@ -36,12 +36,12 @@ class Verse(object):
         if len(args) == 1 and isinstance(args[0], int):
             strval = str(args[0])
             # If strval length is 5, we know the leading 0 got chopped off during conversion
-            if len(strval) == 5:
+            if len(strval) == 7:
                 strval = '0{}'.format(strval)
             # Parse (e.g. 010133)
             self.book = int(strval[:2])
-            self.chapter = int(strval[2:4])
-            self.verse = int(strval[4:])
+            self.chapter = int(strval[2:5])
+            self.verse = int(strval[5:])
             self.translation = None
 
         # if we got 3 or 4 values, let's assume they are book, chapter, verse, translation)
@@ -188,7 +188,7 @@ class Verse(object):
         This is especially useful for saving to a database and searching for a passage.
         """
         # Concatenate book, chapter, and verse string values then cast to int
-        str = '{book:02d}{chapter:02d}{verse:02d}'.format(
+        str = '{book:02d}{chapter:03d}{verse:03d}'.format(
             book=self.book,
             chapter=self.chapter,
             verse=self.verse
