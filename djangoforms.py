@@ -17,7 +17,6 @@ class VerseFormField(forms.Field):
 
 class VerseField(models.Field):
     description = "A scripture reference to a specific verse"
-    empty_strings_allowed = False
     __metaclass__ = models.SubfieldBase
 
     def __init__(self, *args, **kwargs):
@@ -27,32 +26,17 @@ class VerseField(models.Field):
     def db_type(self, connection):
         return 'int(%s)' % self.max_length
 
-    def get_internal_type(self):
-        return "VerseField"
+    def get_prep_value(self, value):
+        return hash(value)
 
     def to_python(self, value):
-        if value is None:
+        if value is None or type(value) is Verse:
             return value
 
         try:
             return Verse(value)
         except (RangeError, Exception) as err:
             raise forms.ValidationError(err.__str__())
-
-    def get_db_prep_lookup(self, lookup_type, value):
-        # For "__book", "__chapter", and "__verse" lookups, convert the value
-        # to an int so the database backend always sees a consistent type.
-        if lookup_type in ('book', 'verse', 'chapter'):
-            return [int(value)]
-        return super(VerseField, self).get_db_prep_lookup(lookup_type, value)
-
-    def get_db_prep_value(self, value):
-        # Casts dates into a string for saving to db
-        return hash(value)
-
-    def value_to_string(self, obj):
-        val = self._get_val_from_obj(obj)
-        return self.get_db_prep_value(val)
 
     def formfield(self, **kwargs):
         defaults = {'form_class': VerseFormField}

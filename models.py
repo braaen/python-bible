@@ -24,6 +24,9 @@ class Verse(object):
                   verse = 1
                   Verse(book, chapter, verse)
 
+                  hash = 46002001
+                  Verse(hash)
+
                   normalized_string = '46-2-1'
                   Verse(normalized_string)
 
@@ -32,17 +35,26 @@ class Verse(object):
                   unformatted_string = '1c 12:1'
                   Verse(unformatted_string)"""
 
+        # Initialize all properties first
+        self.book = 0
+        self.chapter = 0
+        self.verse = 0
+        self.translation = None
+
         # If we received one integer, convert to string and parse
-        if len(args) == 1 and isinstance(args[0], int):
-            strval = str(args[0])
-            # If strval length is 5, we know the leading 0 got chopped off during conversion
-            if len(strval) == 7:
-                strval = '0{}'.format(strval)
-            # Parse (e.g. 010133)
-            self.book = int(strval[:2])
-            self.chapter = int(strval[2:5])
-            self.verse = int(strval[5:])
-            self.translation = None
+        if len(args) == 1 and (isinstance(args[0], long) or isinstance(args[0], int)):
+            try:
+                strval = str(args[0])
+                # If strval length is 7, we know the leading 0 got chopped off during conversion
+                if len(strval) == 7:
+                    strval = '0{}'.format(strval)
+                # Parse (e.g. 01001033)
+                self.book = int(strval[:2])
+                self.chapter = int(strval[2:5])
+                self.verse = int(strval[5:])
+                self.translation = None
+            except:
+                raise RangeError("We can't parse the number passed in: {}".format(args[0]))
 
         # if we got 3 or 4 values, let's assume they are book, chapter, verse, translation)
         elif len(args) >= 3:
@@ -51,15 +63,12 @@ class Verse(object):
             self.verse = args[2]
             if len(args) == 4:
                 self.translation = args[3]
-            else:
-                self.translation = None
 
         # if we only got one value, lets try to figure it out
-        elif len(args) == 1:
+        elif len(args) == 1 and len(args[0]) > 0:
 
             # maybe we got a normalized b-c-v(-t) string
             try:
-
                 # check to make sure we have a valid verse string
                 if not verse_re.search(args[0]):
                     raise Exception('String should be in normalized b-c-v(-t) format.')
@@ -69,8 +78,6 @@ class Verse(object):
                 self.book, self.chapter, self.verse = map(int, parts[:3])
                 if len(parts) > 3:
                     self.translation = parts[3]
-                else:
-                    self.translation = None
 
             # if not, let's try to extract the values
             except:
@@ -91,7 +98,7 @@ class Verse(object):
                 try:
                     self.translation = translation_re.search(args[0]).group(0).upper()
                 except:
-                    self.translation = None
+                    pass
 
                 # try to find the book listed as a book name or abbreviation
                 self.bible = data.bible_data(self.translation)
